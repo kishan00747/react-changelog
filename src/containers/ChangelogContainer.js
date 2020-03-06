@@ -5,7 +5,8 @@ import ChangelogFilter from "../components/ChangelogFilter.js";
 
 export default class ChangelogContainer extends Component {
   static propTypes = {
-    endpoint: PropTypes.string
+    endpoint: PropTypes.string,
+    data: PropTypes.object,
   };
   constructor(props) {
     super(props);
@@ -15,30 +16,46 @@ export default class ChangelogContainer extends Component {
       versions: [],
       filter: {
         improvement: false,
-        "bug-fix": false,
+        'bug-fix': false,
         feature: false
       }
     };
   }
 
   componentWillMount() {
-    const { endpoint } = this.props;
+    const { endpoint, data } = this.props;
     // TODO: Add error handling and bad format
-    fetch(endpoint)
-      .then(response => response.json())
-      .then(({ title, list }) => {
-        const versions = list.map(({ version }) => {
-          return {
-            version,
-            slug: version.replaceAll(".", "")
-          };
-        });
-        this.setState({
-          list,
-          title,
-          versions
-        });
+    if (data) {
+      const { title, list } = data;
+      const versions = list.map(({ version }) => {
+        return {
+          version,
+          slug: version.replaceAll(".", "")
+        };
       });
+      this.setState({
+        list,
+        title,
+        versions
+      });
+    }
+    else {
+      fetch(endpoint)
+        .then(response => response.json())
+        .then(({ title, list }) => {
+          const versions = list.map(({ version }) => {
+            return {
+              version,
+              slug: version.replaceAll(".", "")
+            };
+          });
+          this.setState({
+            list,
+            title,
+            versions
+          });
+        });
+    }
   }
 
   onChange(e) {
