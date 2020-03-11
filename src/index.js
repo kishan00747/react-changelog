@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 
-// import "./css/base.css";
 import "./css/styles.css";
 import "./css/lib/fontawesome.css";
 
